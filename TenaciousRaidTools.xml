@@ -23,10 +23,10 @@
 					</Anchors>
 				</FontString>
 				<FontString inherits="GameFontNormal" name="$parentHeader"
-				text="This is an addon from the Tenacious, the top raiding guild on Thrall-US, with some functionality that its raiders have found useful.">
-					<Size x="280" y="60"/>
+				text="This is an addon from Tenacious, the top* raiding guild on Thrall-US, with some functionality that its raiders have found useful.">
+					<Size x="290" y="60"/>
 					<Anchors>
-						<Anchor point="TOPLEFT" x="10" y="-30" relativeTo="$parent"/>
+						<Anchor point="TOPLEFT" x="20" y="-30" relativeTo="$parent"/>
 					</Anchors>
 				</FontString>
 					<FontString inherits="GameFontHighlightSmall" name="$parentWorkOrderText" 
