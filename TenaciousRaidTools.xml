@@ -40,14 +40,21 @@
 					text="It will cycle through your professions if you press repeatedly.">
 						<Size x="300" y="20"/>
 						<Anchors>
-							<Anchor point="TOPLEFT" x="0" y="-60" relativeTo="$parentWorkOrderText"/>
+							<Anchor point="TOPLEFT" x="0" y="-50" relativeTo="$parentWorkOrderText"/>
+						</Anchors>
+					</FontString>
+					<FontString inherits="GameFontHighlightSmall" name="$parentWorkOrderText2_5" 
+					text="If the player name is blank, it will send guild orders">
+						<Size x="300" y="20"/>
+						<Anchors>
+							<Anchor point="TOPLEFT" x="0" y="-15" relativeTo="$parentWorkOrderText2" />
 						</Anchors>
 					</FontString>
 					<FontString inherits="GameFontHighlightSmall" name="$parentWorkOrderText3" 
 					text="You have to have the work order UI open for this to work">
 						<Size x="300" y="20"/>
 						<Anchors>
-							<Anchor point="TOPLEFT" x="0" y="-15" relativeTo="$parentWorkOrderText2" />
+							<Anchor point="TOPLEFT" x="0" y="-15" relativeTo="$parentWorkOrderText2_5" />
 						</Anchors>
 					</FontString>
 					
@@ -77,7 +84,7 @@
 						--if (self:GetText() == '' or self:GetText() == nil) then
 						--	self:SetText("Bernycinders")
 						--end
-						self:AddHistoryLine("Bernycinders")
+						--self:AddHistoryLine("Bernycinders")
 					</OnLoad>
 				</Scripts>
                 <Size x="100" y="20"/>

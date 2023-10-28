@@ -2,18 +2,18 @@ local frame = CreateFrame("FRAME", "TenaciousRaidToolsHiddenFrame")
 frame:RegisterEvent("PLAYER_LOGIN")
 frame:RegisterEvent("CRAFTINGORDERS_SHOW_CUSTOMER")
 
-TRT = {}
+--TRT = {}
 
 SLASH_TENACIOUS1 = "/tenacious"
 SLASH_TENACIOUS2 = "/tenaciousraidtools"
 SLASH_TENACIOUS3 = "/trt"
 
 local function eventHandler(self, event, ...)
-   if event == "PLAYER_LOGIN" or event == "CRAFTINGORDERS_SHOW_CUSTOMER" then
+   if event == "CRAFTINGORDERS_SHOW_CUSTOMER" then
 	   TenaciousRaidToolsMainFrame:Show()
 	   
-	   TRT.m = TenaciousRaidToolsMainFrame;
-	   TRT.c = TenaciousRaidToolsMainFramePaddington;
+	   --TRT.m = TenaciousRaidToolsMainFrame;
+	   --TRT.c = TenaciousRaidToolsMainFramePaddington;
    end
 end
 
@@ -25,8 +25,16 @@ end
 
 function TenaciousRaidToolsMainFrame_SendTreatiseOrder()
 	local craftsman = TenaciousRaidToolsMainFrameWorkOrderInput:GetText()
-	print("Send order to",craftsman);
-	TenaciousRaidToolsMainFrameWorkOrderInput:AddHistoryLine(craftsman)
+	local guildOrder = false
+	
+	if (craftsman == '' or craftsman == nil) then
+		guildOrder = true
+	else
+		--Note that this history line thing doesn't work for some reason:
+		TenaciousRaidToolsMainFrameWorkOrderInput:AddHistoryLine(craftsman)
+	end
+	
+	--print("Send order to",craftsman);
     local profs = {};
     profs[164] = 47600;
     profs[165] = 47595;
@@ -54,14 +62,20 @@ function TenaciousRaidToolsMainFrame_SendTreatiseOrder()
         _,_,_,_,_,_, skillLine, _,_,_ = GetProfessionInfo(p2);
     end
 
+	local orderType = 2
+	local target = craftsman
+	if guildOrder then
+		orderType = 1
+		target=""
+	end
     if (profs[skillLine] ~= nil) then
         C_CraftingOrders.PlaceNewOrder({
-            skillLineAbilityID= profs[skillLine] 
-            ,orderType=2,
+            skillLineAbilityID= profs[skillLine],
+			orderType=orderType,
             orderDuration=1, --48hrs
             tipAmount=200*100*100, --200g, covers treatise mats as of US servers on Oct. 27th, 2023
             customerNotes="",
-            orderTarget=craftsman,
+            orderTarget=target,
             reagentItems={{quantity=10,itemID=190456}},
 			--Change this to reagentItems={{}} for no mats
 			--including all the mats is more trouble than it's worth, just adjust tipAmount
