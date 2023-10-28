@@ -4,3 +4,5 @@ Tools to help raiders by the top* guild on Thrall-US
 This addon has some very useful and important functionality to support the raiding public.  For years we've kept this secret within our guild to give ourselves a substantial competitive advantage, but with Season 3 on the horizon, the time has come to spread this knowledge
 
 To open TRT, type /trt, /tenaciousraidtools, or open the crafting orders UI
+
+<img width="309" alt="Screenshot" src="https://github.com/Debuggernaut/TenaciousRaidTools/assets/20571604/ded3a0b3-7a41-4881-a3ef-bcb0892a17db">
