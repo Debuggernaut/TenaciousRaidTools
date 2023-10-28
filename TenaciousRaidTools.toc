@@ -1,0 +1,7 @@
+## Interface: 100105
+## Title: Tenacious Raid Tools
+## Notes: Tools to help raiders by the top* guild on Thrall-US
+## Author: Bernycinders
+## Version: 0.1
+TenaciousRaidTools.xml
+TenaciousRaidTools.lua
