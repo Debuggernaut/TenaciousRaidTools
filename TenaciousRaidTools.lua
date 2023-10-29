@@ -2,13 +2,17 @@ local frame = CreateFrame("FRAME", "TenaciousRaidToolsHiddenFrame")
 frame:RegisterEvent("PLAYER_LOGIN")
 frame:RegisterEvent("CRAFTINGORDERS_SHOW_CUSTOMER")
 
-_TRTData = {}
+_TRTData = {
+    cur = {dps = 0};
+    boss = {dps = 0};
+    overall = {dps = 0};
+}
 
 SLASH_TENACIOUS1 = "/tenacious"
 SLASH_TENACIOUS2 = "/tenaciousraidtools"
 SLASH_TENACIOUS3 = "/trt"
 
-function parseStats(combat)
+local function parseStats(combat)
 
     local time = combat:GetCombatTime()
 
@@ -35,7 +39,8 @@ function parseStats(combat)
     return curData
 end
 
-function updateDetailsData()
+local function updateDetailsData()
+    print("Updating data..");
     local combat = Details:GetCombat(0);
     local isBoss = combat:GetBossInfo() ~= nil
 
@@ -156,6 +161,54 @@ function TenaciousRaidToolsMainFrame_SendTreatiseOrder()
     end
 end
 
+_TRTData.lastUnit = {}
+
+local function a2t(tt, str1, str2)
+    local left = NORMAL_FONT_COLOR_CODE .. str1 .. FONT_COLOR_CODE_CLOSE
+    local right = HIGHLIGHT_FONT_COLOR_CODE .. str2 .. FONT_COLOR_CODE_CLOSE
+    tt:AddDoubleLine(left, right)
+end
+
+local function coolFormat(time)
+    local str = ""
+    local s = time
+    if s > 60 then
+        local m = math.floor(s/60.0)
+        s = math.floor(s) % 60
+
+        str = string.format("%0.0f ",m)
+    end
+
+    str = str .. string.format("%1.1fs", s)
+
+    return str
+end
+
+if TooltipDataProcessor then
+    TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, function(tooltip, data)
+        if not data or not data.type then return end
+        if data.type == Enum.TooltipDataType.Unit then
+            _TRTData.lastUnit = data
+            --UnitTokenFromGUID(_TRTData.lastUnit.guid)
+            local hp = UnitHealth("mouseover")
+            --/dump UnitHealth(_TRTData.lastUnit.guid)
+            a2t(tooltip, "Hitpoints:", string.format("%0.1fk", hp/1000.0))
+
+            a2t(tooltip, "Kill time estimates:","")
+            if _TRTData.cur.dps > 0 then
+                a2t(tooltip, "Current rate:", coolFormat(hp / _TRTData.cur.dps))
+            end
+            if _TRTData.overall.dps > 0 then
+                a2t(tooltip, "Overall:", coolFormat(hp / _TRTData.overall.dps))
+            end
+            if _TRTData.boss.dps > 0 then
+                a2t(tooltip, "Last Boss:", coolFormat(hp / _TRTData.boss.dps))
+            end
+
+        end
+    end)
+end
+
 function TenaciousRaidToolsMainFrame_ToggleKillTime()
     local haveCheckedForBosses = false
     local cb = TenaciousRaidToolsMainFramePaddington;
@@ -177,7 +230,6 @@ function TenaciousRaidToolsMainFrame_ToggleKillTime()
             _TRTData.timer:Cancel()
         end
     end
-    print("Todo");
 end
 
 local x = nil
