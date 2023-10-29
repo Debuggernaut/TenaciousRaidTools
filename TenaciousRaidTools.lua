@@ -3,6 +3,7 @@ frame:RegisterEvent("PLAYER_LOGIN")
 frame:RegisterEvent("CRAFTINGORDERS_SHOW_CUSTOMER")
 
 _TRTData = {
+    enabled = false
     cur = {dps = 0};
     boss = {dps = 0};
     overall = {dps = 0};
@@ -185,6 +186,7 @@ end
 
 if TooltipDataProcessor then
     TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, function(tooltip, data)
+        if not _TRTData.enabled then return end
         if not data or not data.type then return end
         if data.type == Enum.TooltipDataType.Unit then
             _TRTData.lastUnit = data
@@ -195,10 +197,10 @@ if TooltipDataProcessor then
 
             a2t(tooltip, "Kill time estimates:","")
             if _TRTData.cur.dps > 0 then
-                a2t(tooltip, "Current rate:", coolFormat(hp / _TRTData.cur.dps))
+                a2t(tooltip, "Current rate:", coolFormat(hp / (_TRTData.cur.dps/5)))
             end
             if _TRTData.overall.dps > 0 then
-                a2t(tooltip, "Overall:", coolFormat(hp / _TRTData.overall.dps))
+                a2t(tooltip, "Overall:", coolFormat(hp / (_TRTData.overall.dps/5)))
             end
             if _TRTData.boss.dps > 0 then
                 a2t(tooltip, "Last Boss:", coolFormat(hp / _TRTData.boss.dps))
@@ -220,9 +222,11 @@ function TenaciousRaidToolsMainFrame_ToggleKillTime()
 
         --Update now and every 5 seconds
         updateDetailsData()
+        _TRTData.enabled = true
         _TRTData.timer = C_Timer.NewTicker(5, updateDetailsData);
 
     else
+        _TRTData.enabled = false
         TenaciousRaidToolsMainFramePadText:SetText("");
         TenaciousRaidToolsMainFramePadText2:SetText("");
         if _TRTData.timer ~= nil then 
