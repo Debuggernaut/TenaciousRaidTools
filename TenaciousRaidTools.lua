@@ -40,7 +40,6 @@ local function parseStats(combat)
 end
 
 local function updateDetailsData()
-    print("Updating data..");
     local combat = Details:GetCombat(0);
     local isBoss = combat:GetBossInfo() ~= nil
 
@@ -176,7 +175,7 @@ local function coolFormat(time)
         local m = math.floor(s/60.0)
         s = math.floor(s) % 60
 
-        str = string.format("%0.0f ",m)
+        str = string.format("%0.0fm ",m)
     end
 
     str = str .. string.format("%1.1fs", s)
@@ -221,7 +220,7 @@ function TenaciousRaidToolsMainFrame_ToggleKillTime()
 
         --Update now and every 5 seconds
         updateDetailsData()
-        _TRTData.timer = C_Timer.NewTimer(5, updateDetailsData);
+        _TRTData.timer = C_Timer.NewTicker(5, updateDetailsData);
 
     else
         TenaciousRaidToolsMainFramePadText:SetText("");
