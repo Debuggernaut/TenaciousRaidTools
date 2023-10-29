@@ -3,7 +3,7 @@ frame:RegisterEvent("PLAYER_LOGIN")
 frame:RegisterEvent("CRAFTINGORDERS_SHOW_CUSTOMER")
 
 _TRTData = {
-    enabled = false
+    enabled = false;
     cur = {dps = 0};
     boss = {dps = 0};
     overall = {dps = 0};
@@ -63,7 +63,7 @@ local function updateDetailsData()
             end
             if combat:GetBossInfo() ~= nil then
                 _TRTData.boss = parseStats(combat)
-                print("Boss at i=", i)
+                --print("Boss at i=", i)
                 break
             end
         end
