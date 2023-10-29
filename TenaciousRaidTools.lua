@@ -2,19 +2,91 @@ local frame = CreateFrame("FRAME", "TenaciousRaidToolsHiddenFrame")
 frame:RegisterEvent("PLAYER_LOGIN")
 frame:RegisterEvent("CRAFTINGORDERS_SHOW_CUSTOMER")
 
---TRT = {}
+_TRTData = {}
 
 SLASH_TENACIOUS1 = "/tenacious"
 SLASH_TENACIOUS2 = "/tenaciousraidtools"
 SLASH_TENACIOUS3 = "/trt"
 
+function parseStats(combat)
+
+    local time = combat:GetCombatTime()
+
+    local curData = {}
+    curData.actors = {}
+
+    local total=0;
+    local f = combat:GetActorList(DETAILS_ATTRIBUTE_DAMAGE)
+    for x=1,#f do
+        if not f[x]:IsEnemy() and not f[x]:IsPetOrGuardian() then
+            --print(f[x]:name(), " ",f[x].total / 1000.0); 
+            if (UnitIsDeadOrGhost(f[x]:name())) then
+                --print(f[x]:name()," is dead, omitting their damage")
+            else
+                curData.actors[#curData.actors+1] = f[x]
+                total = total + f[x].total
+            end
+        end
+    end
+    curData.total = total
+    curData.time = time
+    curData.dps = total/time
+
+    return curData
+end
+
+function updateDetailsData()
+    local combat = Details:GetCombat(0);
+    local isBoss = combat:GetBossInfo() ~= nil
+
+    _TRTData.cur = parseStats(combat)
+    if isBoss then
+        _TRTData.boss = _TRTData.cur
+    elseif not _TRTData.haveCheckedForBosses then
+        _TRTData.haveCheckedForBosses = true
+
+        -- perf issues if you don't ever clear your data
+        -- local totalCombats = Details:GetCombatSegments()
+        -- if totalCombats > 10 then
+        --     totalCombats = 10
+        -- end
+
+        for i=1,10 do
+            combat = Details:GetCombat(i);
+            if combat == nil then
+                break
+            end
+            if combat:GetBossInfo() ~= nil then
+                _TRTData.boss = parseStats(combat)
+                print("Boss at i=", i)
+                break
+            end
+        end
+    end
+
+    local overall = Details:GetCombat(-1)
+    _TRTData.overall = parseStats(overall)
+    
+    local curdeeps = _TRTData.cur.dps
+    local odeeps = _TRTData.overall.dps
+    local labelStr = string.format("Estimated Group DPS: Current %4.0fk, Overall %4.0fk",
+        curdeeps/1000.0, odeeps/1000.0)
+    TenaciousRaidToolsMainFramePadText:SetText(labelStr);
+
+    if _TRTData.boss ~= nil then
+        local lastboss = _TRTData.boss.dps
+        labelStr = string.format("Last Boss %4.0fk", lastboss/1000.0)
+        TenaciousRaidToolsMainFramePadText2:SetText(labelStr);
+    end
+end
+
 local function eventHandler(self, event, ...)
-   if event == "CRAFTINGORDERS_SHOW_CUSTOMER" then
-	   TenaciousRaidToolsMainFrame:Show()
-	   
-	   --TRT.m = TenaciousRaidToolsMainFrame;
-	   --TRT.c = TenaciousRaidToolsMainFramePaddington;
-   end
+    --if event == "CRAFTINGORDERS_SHOW_CUSTOMER" then
+        TenaciousRaidToolsMainFrame:Show()
+
+        --TRT.m = TenaciousRaidToolsMainFrame;
+        --TRT.c = TenaciousRaidToolsMainFramePaddington;
+    --end
 end
 
 frame:SetScript("OnEvent", eventHandler)
@@ -24,17 +96,17 @@ function SlashCmdList.TENACIOUS(msg, editbox)
 end
 
 function TenaciousRaidToolsMainFrame_SendTreatiseOrder()
-	local craftsman = TenaciousRaidToolsMainFrameWorkOrderInput:GetText()
-	local guildOrder = false
-	
-	if (craftsman == '' or craftsman == nil) then
-		guildOrder = true
-	else
-		--Note that this history line thing doesn't work for some reason:
-		TenaciousRaidToolsMainFrameWorkOrderInput:AddHistoryLine(craftsman)
-	end
-	
-	--print("Send order to",craftsman);
+    local craftsman = TenaciousRaidToolsMainFrameWorkOrderInput:GetText()
+    local guildOrder = false
+
+    if (craftsman == '' or craftsman == nil) then
+        guildOrder = true
+    else
+        --Note that this history line thing doesn't work for some reason:
+        TenaciousRaidToolsMainFrameWorkOrderInput:AddHistoryLine(craftsman)
+    end
+
+    --print("Send order to",craftsman);
     local profs = {};
     profs[164] = 47600;
     profs[165] = 47595;
@@ -48,53 +120,89 @@ function TenaciousRaidToolsMainFrame_SendTreatiseOrder()
     profs[755] = 47596;
     --profs[773] = ; inscription
 
-    ds_Treatise = ds_Treatise+1;
+    local ds_Treatise = ds_Treatise + 1;
     if (ds_Treatise > 2) then
         ds_Treatise = 1;
     end
 
-    p1,p2,_,_ = GetProfessions();
+    local p1, p2, _, _ = GetProfessions();
 
-    skillLine = 0;
+    local skillLine = 0;
     if (ds_Treatise == 1) then
-        _,_,_,_,_,_, skillLine, _,_,_ = GetProfessionInfo(p1);
+        _, _, _, _, _, _, skillLine, _, _, _ = GetProfessionInfo(p1);
     else
-        _,_,_,_,_,_, skillLine, _,_,_ = GetProfessionInfo(p2);
+        _, _, _, _, _, _, skillLine, _, _, _ = GetProfessionInfo(p2);
     end
 
-	local orderType = 2
-	local target = craftsman
-	if guildOrder then
-		orderType = 1
-		target=""
-	end
+    local orderType = 2
+    local target = craftsman
+    if guildOrder then
+        orderType = 1
+        target = ""
+    end
     if (profs[skillLine] ~= nil) then
         C_CraftingOrders.PlaceNewOrder({
-            skillLineAbilityID= profs[skillLine],
-			orderType=orderType,
-            orderDuration=1, --48hrs
-            tipAmount=200*100*100, --200g, covers treatise mats as of US servers on Oct. 27th, 2023
-            customerNotes="",
-            orderTarget=target,
-            reagentItems={{quantity=10,itemID=190456}},
-			--Change this to reagentItems={{}} for no mats
-			--including all the mats is more trouble than it's worth, just adjust tipAmount
-            craftingReagentItems={}})
+            skillLineAbilityID = profs[skillLine],
+            orderType = orderType,
+            orderDuration = 1,     --48hrs
+            tipAmount = 200 * 100 * 100, --200g, covers treatise mats as of US servers on Oct. 27th, 2023
+            customerNotes = "",
+            orderTarget = target,
+            reagentItems = { { quantity = 10, itemID = 190456 } },
+            --Change this to reagentItems={{}} for no mats
+            --including all the mats is more trouble than it's worth, just adjust tipAmount
+            craftingReagentItems = {}
+        })
     end
 end
 
 function TenaciousRaidToolsMainFrame_ToggleKillTime()
+    local haveCheckedForBosses = false
+    local cb = TenaciousRaidToolsMainFramePaddington;
+    if (cb:GetChecked()) then
+        if Details == nil then
+            TenaciousRaidToolsMainFramePadText:SetText("Error: Details not detected");
+            cb:SetChecked(false)
+            return
+        end
 
-	print("Todo");
+        --Update now and every 5 seconds
+        updateDetailsData()
+        _TRTData.timer = C_Timer.NewTimer(5, updateDetailsData);
+
+    else
+        TenaciousRaidToolsMainFramePadText:SetText("");
+        TenaciousRaidToolsMainFramePadText2:SetText("");
+        if _TRTData.timer ~= nil then 
+            _TRTData.timer:Cancel()
+        end
+    end
+    print("Todo");
 end
+
+local x = nil
 
 function TenaciousRaidToolsMainFrame_SendQuestOrder()
-  --sorry, played some code golf to fit this into a macro..
-  if x==nil then x=0;end;x=x+1;s={751,447,123,590,280,-33};C_CraftingOrders.PlaceNewOrder({skillLineAbilityID=s[x%#s+1]+47000,orderType=1,orderDuration=2,tipAmount=100,customerNotes="",orderTarget="GUILD",reagentItems={},craftingReagentItems={}})
+    if x == nil then x = 0; end;
+    x = x + 1;
 
-  --To get the SkillID that the WoW API uses here, you can run this macro with your crafting window open:
-  -- /run local x=0; for _, id in pairs(C_TradeSkillUI.GetAllRecipeIDs()) do    local recipeInfo = C_TradeSkillUI.GetRecipeInfo(id);    print(recipeInfo.recipeID, recipeInfo.skillLineAbilityID, recipeInfo.name); x = x+1; if x > 150 then break; end; end
+    --skillIDs -47k sry
+    local s = { 751, 447, 123, 590, 280, -33 };
+    C_CraftingOrders.PlaceNewOrder(
+        {
+            skillLineAbilityID = s[x % #s + 1] + 47000,
+            orderType = 1,
+            orderDuration = 2,
+            tipAmount = 100,
+            customerNotes = "",
+            orderTarget = "GUILD",
+            reagentItems = {},
+            craftingReagentItems = {}
+        });
 
+    --sorry, played some code golf to fit this into a macro.. original macro is here:
+    --if x==nil then x=0;end;x=x+1;s={751,447,123,590,280,-33};C_CraftingOrders.PlaceNewOrder({skillLineAbilityID=s[x%#s+1]+47000,orderType=1,orderDuration=2,tipAmount=100,customerNotes="",orderTarget="GUILD",reagentItems={},craftingReagentItems={}})
+
+    --To get the SkillID that the WoW API uses here, you can run this macro with your crafting window open:
+    -- /run local x=0; for _, id in pairs(C_TradeSkillUI.GetAllRecipeIDs()) do    local recipeInfo = C_TradeSkillUI.GetRecipeInfo(id);    print(recipeInfo.recipeID, recipeInfo.skillLineAbilityID, recipeInfo.name); x = x+1; if x > 150 then break; end; end
 end
-
--- CRAFTINGORDERS_SHOW_CUSTOMER

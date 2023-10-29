@@ -1,20 +1,18 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
-    <Frame name="TenaciousRaidToolsMainFrame" parent="UIParent" 
-    inherits="SimplePanelTemplate" clampedToScreen="true" enableMouse="true" movable="true" toplevel="true" hidden="true">
-        <Scripts>
-            <OnLoad>
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
+	<Frame name="TenaciousRaidToolsMainFrame" parent="UIParent" inherits="SimplePanelTemplate" clampedToScreen="true" enableMouse="true" movable="true" toplevel="true" hidden="true">
+		<Scripts>
+			<OnLoad>
                 self:RegisterForDrag("LeftButton");
-                local tc = TenaciousRaidToolsMainFramePaddington
-                tc:Disable();
-            </OnLoad>
-            <OnDragStart>self:StartMoving();</OnDragStart>
-            <OnDragStop>self:StopMovingOrSizing();</OnDragStop>
-        </Scripts>
-        <Size x="330" y="400"/>
-        <Anchors>
-            <Anchor point="CENTER"/>
-        </Anchors>
-        <Layers>
+			</OnLoad>
+			<OnDragStart>self:StartMoving();</OnDragStart>
+			<OnDragStop>self:StopMovingOrSizing();</OnDragStop>
+		</Scripts>
+		<Size x="330" y="400"/>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+		<Layers>
 			<Layer level="ARTWORK">
 				<!-- TODO: Cool UI -->
 				<FontString parentKey="pageNumber" inherits="GameFontHighlightSmallOutline" text="Tenacious Raid Tools">
@@ -22,63 +20,62 @@
 						<Anchor point="CENTER" relativePoint="TOPLEFT" x="145" y="-18"/>
 					</Anchors>
 				</FontString>
-				<FontString inherits="GameFontNormal" name="$parentHeader"
-				text="This is an addon from Tenacious, the top* raiding guild on Thrall-US, with some functionality that its raiders have found useful.">
+				<FontString inherits="GameFontNormal" name="$parentHeader" text="This is an addon from Tenacious, the top* raiding guild on Thrall-US, with some functionality that its raiders have found useful.">
 					<Size x="290" y="60"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" x="20" y="-30" relativeTo="$parent"/>
 					</Anchors>
 				</FontString>
-					<FontString inherits="GameFontHighlightSmall" name="$parentWorkOrderText" 
-					text="Send work order for treatises for your professions.  Click to send work orders to this player:">
-						<Size x="250" y="25"/>
-						<Anchors>
-							<Anchor point="TOPLEFT" x="20" y="-90"/>
-						</Anchors>
-					</FontString>
-					<FontString inherits="GameFontHighlightSmall" name="$parentWorkOrderText2" 
-					text="It will cycle through your professions if you press repeatedly.">
-						<Size x="300" y="20"/>
-						<Anchors>
-							<Anchor point="TOPLEFT" x="0" y="-50" relativeTo="$parentWorkOrderText"/>
-						</Anchors>
-					</FontString>
-					<FontString inherits="GameFontHighlightSmall" name="$parentWorkOrderText2_5" 
-					text="If the player name is blank, it will send guild orders">
-						<Size x="300" y="20"/>
-						<Anchors>
-							<Anchor point="TOPLEFT" x="0" y="-15" relativeTo="$parentWorkOrderText2" />
-						</Anchors>
-					</FontString>
-					<FontString inherits="GameFontHighlightSmall" name="$parentWorkOrderText3" 
-					text="You have to have the work order UI open for this to work">
-						<Size x="300" y="20"/>
-						<Anchors>
-							<Anchor point="TOPLEFT" x="0" y="-15" relativeTo="$parentWorkOrderText2_5" />
-						</Anchors>
-					</FontString>
-					
-					
-					<FontString inherits="GameFontHighlightSmall" name="$parentPadText" 
-					text="This functionality is not yet available">
-						<Size x="300" y="20"/>
-						<Anchors>
-							<Anchor point="TOP" x="0" y="-50" relativeTo="$parentWorkOrderText3" />
-						</Anchors>
-					</FontString>
-					
-					
-					<FontString inherits="GameFontHighlightSmall" name="$parentWorkOrderText4" 
-					text="Spam your guild with the cheapest possible work orders so they can complete the weekly crafting quest.  (Warning: costs you 20 gold per click!)">
-						<Size x="250" y="40"/>
-						<Anchors>
-							<Anchor point="TOPLEFT" x="0" y="-40" relativeTo="$parentPadText" />
-						</Anchors>
-					</FontString>
+				<FontString inherits="GameFontHighlightSmall" name="$parentWorkOrderText" text="Send work order for treatises for your professions.  Click to send work orders to this player:">
+					<Size x="250" y="25"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="20" y="-90"/>
+					</Anchors>
+				</FontString>
+				<FontString inherits="GameFontHighlightSmall" name="$parentWorkOrderText2" text="It will cycle through your professions if you press repeatedly.">
+					<Size x="300" y="20"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="0" y="-50" relativeTo="$parentWorkOrderText"/>
+					</Anchors>
+				</FontString>
+				<FontString inherits="GameFontHighlightSmall" name="$parentWorkOrderText2_5" text="If the player name is blank, it will send guild orders">
+					<Size x="300" y="20"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="0" y="-15" relativeTo="$parentWorkOrderText2" />
+					</Anchors>
+				</FontString>
+				<FontString inherits="GameFontHighlightSmall" name="$parentWorkOrderText3" text="You have to have the work order UI open for this to work">
+					<Size x="300" y="20"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="0" y="-15" relativeTo="$parentWorkOrderText2_5" />
+					</Anchors>
+				</FontString>
+
+
+				<FontString inherits="GameFontHighlightSmall" name="$parentPadText" text="This functionality is not yet available">
+					<Size x="300" y="15"/>
+					<Anchors>
+						<Anchor point="TOP" x="0" y="-50" relativeTo="$parentWorkOrderText3" />
+					</Anchors>
+				</FontString>
+				<FontString inherits="GameFontHighlightSmall" name="$parentPadText2" text="">
+					<Size x="300" y="20"/>
+					<Anchors>
+						<Anchor point="TOP" x="0" y="-15" relativeTo="$parentPadText" />
+					</Anchors>
+				</FontString>
+
+
+				<FontString inherits="GameFontHighlightSmall" name="$parentWorkOrderText4" text="Spam your guild with the cheapest possible work orders so they can complete the weekly crafting quest.  (Warning: costs you 20 gold per click!)">
+					<Size x="250" y="40"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="0" y="-40" relativeTo="$parentPadText2" />
+					</Anchors>
+				</FontString>
 			</Layer>
-        </Layers>
-        <Frames>
-            <EditBox name="$parentWorkOrderInput" inherits="InputBoxTemplate" autoFocus="false" historyLines="5">
+		</Layers>
+		<Frames>
+			<EditBox name="$parentWorkOrderInput" inherits="InputBoxTemplate" autoFocus="false" historyLines="5">
 				<Scripts>
 					<OnLoad>
 						--if (self:GetText() == '' or self:GetText() == nil) then
@@ -87,62 +84,64 @@
 						--self:AddHistoryLine("Bernycinders")
 					</OnLoad>
 				</Scripts>
-                <Size x="100" y="20"/>
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentWorkOrderText" relativePoint="BOTTOMLEFT" x="5" y="-5"/>
-                </Anchors>
-            </EditBox>
+				<Size x="100" y="20"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentWorkOrderText" relativePoint="BOTTOMLEFT" x="5" y="-5"/>
+				</Anchors>
+			</EditBox>
 
-            <Button inherits="UIPanelButtonTemplate" text="Send Treatise Order">
-                <Size x="150" y="20"/>
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentWorkOrderInput" relativePoint="TOPRIGHT" x="10" y="0"/>
-                </Anchors>
+			<Button inherits="UIPanelButtonTemplate" text="Send Treatise Order">
+				<Size x="150" y="20"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentWorkOrderInput" relativePoint="TOPRIGHT" x="10" y="0"/>
+				</Anchors>
 				<Scripts>
 					<OnClick function="TenaciousRaidToolsMainFrame_SendTreatiseOrder" />
 				</Scripts>
-            </Button>
-					
-            <CheckButton name="$parentPaddington" inherits="UICheckButtonTemplate">
-                <Size x="26" y="26"/>
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="10" y="-30" relativeTo="$parentWorkOrderText3"/>
-                </Anchors>
+			</Button>
+
+			<CheckButton name="$parentPaddington" inherits="UICheckButtonTemplate">
+				<Size x="26" y="26"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="10" y="-30" relativeTo="$parentWorkOrderText3"/>
+				</Anchors>
 				<Scripts>
 					<OnClick>
 						TenaciousRaidToolsMainFrame_ToggleKillTime()
 					</OnClick>
 				</Scripts>
-                <Layers>
-                    <Layer level="OVERLAY">
-                        <FontString inherits="GameFontNormalSmall" text="Estimate kill time on mob tooltips">
-                            <Anchors>
-                                <Anchor point="LEFT" relativeTo="$parent" relativePoint="RIGHT" x="0" y="0"/>
-                            </Anchors>
-                        </FontString>
-                    </Layer>
-                </Layers>
-            </CheckButton>
-			
-            <Button inherits="UIPanelButtonTemplate" text="Send easy work order and lose 20 gold">
-                <Size x="250" y="20"/>
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentWorkOrderText4" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
-                </Anchors>
-				<Scripts><OnClick function="TenaciousRaidToolsMainFrame_SendQuestOrder" /></Scripts>
-            </Button>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString inherits="GameFontNormalSmall" text="Estimate kill time on mob tooltips">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="$parent" relativePoint="RIGHT" x="0" y="0"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</CheckButton>
 
-            <Button inherits="UIPanelCloseButton">
-                <Size x="32" y="32"/>
-                <Anchors>
-                    <Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="-2" y="-2"/>
-                </Anchors>
-                <Scripts>
-                    <OnClick>
+			<Button inherits="UIPanelButtonTemplate" text="Send easy work order and lose 20 gold">
+				<Size x="250" y="20"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentWorkOrderText4" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+				</Anchors>
+				<Scripts>
+					<OnClick function="TenaciousRaidToolsMainFrame_SendQuestOrder" />
+				</Scripts>
+			</Button>
+
+			<Button inherits="UIPanelCloseButton">
+				<Size x="32" y="32"/>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="-2" y="-2"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
                         TenaciousRaidToolsMainFrame:Hide();
-                    </OnClick>
-                </Scripts>
-            </Button>
-        </Frames>
-    </Frame>
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+	</Frame>
 </Ui>
